@@ -3,8 +3,8 @@ import database from "../../setup/database"
 const Query = {
     register: (user) => {
         return new Promise(function(resolve, reject) {
-            let q = `INSERT INTO users (username, email, password) VALUES (`+
-            `'${user.username}', '${user.email}', '${user.password}');`
+            let q = `INSERT INTO users (username, email, password, role) VALUES (`+
+            `'${user.username}', '${user.email}', '${user.password}', 'member');`
             let connection = database.connect()
             connection.query(q, (err, data) => {
                 connection.end()

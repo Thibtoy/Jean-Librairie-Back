@@ -1,6 +1,6 @@
 import userQueries from "./query"
 import bcrypt from "bcrypt"
-import config from "../../../config/server"
+import config from "../../../config/server.json"
 import jwt from "jsonwebtoken"
 
 const refreshToken = decoded => {
@@ -22,15 +22,15 @@ const userServices = {
 				reject({ status: 400, payload: { success: false, message: "All fields are required and must be a string type" }})
 			bcrypt
 				.genSalt()
-				.then(salt => bcrypt.hash(password, salt))
+                .then(salt => bcrypt.hash(password, salt))
 				.then(hashedPassword =>
-					userQueries.register({ username, email, password: hashedPassword })
+					userQueries.register({ username, email, password: hashedPassword, role })
 				)
 				.then(data => {
                     let token = jwt.sign({ logged: true, id: data.insertId }, config.secret, { expiresIn: 900 })
                     resolve({status: 201, token})
                 })
-                .catch(err => reject({ status: 400, payload: { success: false, message: err }}))
+                .catch(err => reject({ status: 401, payload: { success: false, message: "Login error, check your informations" }}))
 		})
     },
     authenticate: body => {
