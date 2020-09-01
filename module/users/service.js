@@ -1,4 +1,4 @@
-import userQueries from "./query"
+import userQueries from "./Query"
 import bcrypt from "bcrypt"
 import config from "../../../config/server.json"
 import jwt from "jsonwebtoken"
@@ -23,9 +23,7 @@ const userServices = {
 			bcrypt
 				.genSalt()
                 .then(salt => bcrypt.hash(password, salt))
-				.then(hashedPassword =>
-					userQueries.register({ username, email, password: hashedPassword, role })
-				)
+                .then(hashedPassword => userQueries.register({ username, email, password: hashedPassword }))
 				.then(data => {
                     let token = jwt.sign({ logged: true, id: data.insertId }, config.secret, { expiresIn: 900 })
                     resolve({status: 201, token})

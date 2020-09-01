@@ -1,15 +1,15 @@
-import database from "../../setup/database"
+import { database } from "../../setup/database"
 
 const Query = {
     register: (user) => {
         return new Promise(function(resolve, reject) {
             let q = `INSERT INTO users (username, email, password, role) VALUES (`+
-            `'${user.username}', '${user.email}', '${user.password}', 'member');`
+            `'${user.username}', '${user.email}', '${user.password}', 'user');`
             let connection = database.connect()
             connection.query(q, (err, data) => {
                 connection.end()
                 if (err) {
-                    console.log(err)
+                    reject(err)
                     (err.sqlState === '23000')? reject('User already exist') : reject('Something went wrong')
                 }
                 else resolve(data)
