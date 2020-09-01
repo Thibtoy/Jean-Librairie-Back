@@ -5,10 +5,8 @@ import morgan from 'morgan'
 import router from './router'
 import databaseInitialisation from './database-initialisation'
 
-const initialisation = server => {
+const initialisation = async server => {
 	console.info('Initialising application backend')
-
-	databaseInitialisation()
 	
 	server.use(bodyParser.json())
 	server.use(bodyParser.urlencoded({ extended: false }))
@@ -26,6 +24,8 @@ const initialisation = server => {
 	})
 
 	router(server)
+
+	await databaseInitialisation()
 
 	console.info('Application backend successfully initialised')
 }

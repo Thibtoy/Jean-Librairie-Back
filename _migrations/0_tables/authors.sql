@@ -1,0 +1,5 @@
+CREATE TABLE `authors` ( 
+	`id` INT NOT NULL AUTO_INCREMENT, 
+	`name` VARCHAR(70) NOT NULL,
+	 PRIMARY KEY (`id`)
+) ENGINE = InnoDB;

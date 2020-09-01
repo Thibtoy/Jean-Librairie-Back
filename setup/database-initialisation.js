@@ -20,29 +20,38 @@ export default function databaseInitialisation() {
 
 			for (let i = 0, l = migrations.length; i < l; i++) {
 				let migration = migrations[i]
-				let sqls = fs.readFileSync(`./_migrations/${migration}`).toString().replace(/\\;/gi, '/$\\').split(';')
+				let operations = fs.readdirSync(`./_migrations/${migration}`)
 
-				console.info(`Creating table \`${migration.split('.')[0]}\``)
+				for (let j = 0, n = operations.length; j < n; j++) {
+					let operation = operations[j]
+					let sqls = fs.readFileSync(`./_migrations/${migration}/${operation}`).toString().replace(/\\;/gi, '/$\\').split(';')
+					let operationName = migration.split('_')[1]
 
-				await sqls.forEach(async (sql, i) => {
-					await new Promise ((resolve, reject) => {
-						if (i === (sqls.length - 1)) resolve(true)
-						connection.query(sql.replace(/\/\$\\/gi, ';'), (err) => {
-							if (err) reject(err)
-							else resolve()
+					console.info(`Creating ${operationName.substring(0, operationName.length - 1).toLowerCase()} \`${operation.split('.')[0]}\``)
+
+					await sqls.forEach(async (sql, i) => {
+						await new Promise ((resolve, reject) => {
+							if (i === (sqls.length - 1)) resolve(true)
+							connection.query(sql.replace(/\/\$\\/gi, ';'), (err) => {
+								if (err) reject(err)
+								else resolve()
+							})
 						})
+						.then((end) => {
+							if (end) console.info(`${operationName[0].toUpperCase() + operationName.slice(1)} ${operation.split('.')[0]} successfully created!`)
+						})
+						.catch(err => {throw err})
 					})
-					.then((end) => {
-						if (end) console.info(`Table ${migration.split('.')[0]} successfully created!`)
-					})
-					.catch(err => {throw err})
-				})
+				}
 			}
-			console.info('Your database is ready to use')
 
-			loadBooksData()
+			console.info('loading books datas')
+			await loadBooksData(connection)
+			console.info('books data successfully loaded')
 			
 			connection.end()
+
+			console.info('Your database is ready to use')
 		})
 	})
 }
