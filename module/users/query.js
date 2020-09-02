@@ -27,6 +27,18 @@ const Query = {
                 else reject('User does not exist')
             })
         })
+    },
+    getUserRoleById: userId => {
+        return new Promise(function(resolve, reject) {
+            let q = `SELECT role FROM users WHERE users.id = '${userId}';`
+            let connection = database.connect()
+            connection.query(q, (err, data) => {
+                connection.end()
+                if (err) reject(err)
+                else if (data.length > 0) resolve(data[0].role)
+                else reject('User does not exist')
+            })
+        })
     }
 }
 
