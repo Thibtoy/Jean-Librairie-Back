@@ -2,13 +2,15 @@ import bookServices from './services'
 
 const controller = {
 	index: (req, res) => {
-		bookServices.getAll()
+		bookServices.find()
 		.then(response => res.status(response.status).send(response.payload))
 		.catch(err => res.status(err.status).send(err.payload))
 	},
 
-	byCategory: (req, res) => {
-
+	bySlug: (req, res) => {
+		bookServices.find(req.params.slug)
+		.then(response => res.status(response.status).send(response.payload))
+		.catch(err => res.status(err.status).send(err.payload))
 	}
 }
 

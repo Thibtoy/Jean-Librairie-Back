@@ -22,6 +22,7 @@ export default (connection) => {
 				let bookId
 
 				book.title = bookInfos.title
+				book.slug = book.title.replace(/ /gi, "-").toLowerCase()
 				book.image = (bookInfos.imageLinks && bookInfos.imageLinks.thumbnail)? bookInfos.imageLinks.thumbnail : null
 				book.description = bookInfos.description || "/"
 				book.quantity = 3

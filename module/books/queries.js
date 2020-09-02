@@ -1,10 +1,11 @@
 import { database } from '../../setup/database'
 
 const queries = {
-	getAll: () => {
+	find: (bookSlug = false) => {
 		return new Promise(function(resolve, reject) {
 			let connection = database.connect()
-            let q = `SELECT b.id, b.title, b.publication, b.image FROM \`books\` AS b `
+            let q = `SELECT b.id, b.title, b.publication, b.image FROM \`books\` AS b`
+            if (false !== bookSlug) q += ` WHERE b.slug = '${bookSlug}'`
 
             connection.query(q, async (err, data) => {
                 if (err) {
@@ -24,10 +25,6 @@ const queries = {
             })
         })
 	},
-
-	byCategory: (req, res) => {
-
-	}
 }
 
 function getAuhors(bookId, connection) {
