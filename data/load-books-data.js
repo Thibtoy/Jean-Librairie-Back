@@ -25,8 +25,8 @@ export default (connection) => {
 				book.image = (bookInfos.imageLinks && bookInfos.imageLinks.thumbnail)? bookInfos.imageLinks.thumbnail : null
 				book.description = bookInfos.description || "/"
 				book.quantity = 3
-				book.publication = publication.getFullYear() + '-01-01'
-
+				book.publication = (publication.getFullYear().toString() !== 'NaN') ? (publication.getFullYear() + '-01-01') : null
+				
 				bookId = await createBook(book, connection)
 
 				await linkBookToAuthors(bookId, authorIds, connection)

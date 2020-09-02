@@ -1,4 +1,4 @@
-import userQueries from "./Query"
+import userQueries from "./query"
 import bcrypt from "bcrypt"
 import config from "../../../config/server.json"
 import jwt from "jsonwebtoken"
