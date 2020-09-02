@@ -40,7 +40,7 @@ export default (connection) => {
 
 function createCategory(category, connection) {
 	return new Promise((resolve, reject) => {
-		connection.query('INSERT INTO `categories` SET ?', { name: category }, async (err, result) => {
+		connection.query('INSERT INTO `categories` SET ?', { name: category, slug: category.toLowerCase() }, async (err, result) => {
 			if (err) {
 				console.log(err)
 				reject(err)

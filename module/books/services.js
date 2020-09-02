@@ -5,7 +5,15 @@ const services = {
 		return new Promise((resolve, reject) => {
 			bookQueries.find(bookSlug)
 			.then(data => resolve({ status: 200, payload: { success: true, data } }))
-            .catch(err => reject({ status: 500, payload: { success: false, message: "Internal Server Error" }}))
+            .catch(err => reject({ status: 500, payload: { success: false, message: "Internal Server Error" } }))
+		})
+	},
+
+	findByCategory: (categorySlug = false) => {
+		return new Promise((resolve, reject) => {
+			bookQueries.findByCategory(categorySlug)
+			.then(data => resolve({ status: 200, payload: { success: true, data } }))
+            .catch(err => reject({ status: 500, payload: { success: false, message: "Internal Server Error" } }))
 		})
 	},
 }

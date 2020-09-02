@@ -6,6 +6,36 @@ const queries = {
 			let connection = database.connect()
             let q = `SELECT b.id, b.title, b.publication, b.image FROM \`books\` AS b`
             if (false !== bookSlug) q += ` WHERE b.slug = '${bookSlug}'`
+            else q += ` ORDER BY RAND() LIMIT 12`
+
+            connection.query(q, async (err, data) => {
+                if (err) {
+                    console.error(err)
+                    reject('Something went wrong')
+                }
+                else {
+                	for (let i = 0, l = data.length; i < l; i++) {
+                		let book = data[i]
+                		book.authors = await getAuhors(book.id, connection)
+                		book.categories = await getCategories(book.id, connection)
+                	}
+
+                	connection.end()
+                	resolve(data)
+                }
+            })
+        })
+	},
+	findByCategory: (categorySlug = false) => {
+		return new Promise(function(resolve, reject) {
+			let connection = database.connect()
+            let q = `SELECT b.id, b.title, b.publication, b.image FROM \`books\` AS b`
+
+            if (false !== categorySlug) {
+            	q += ` LEFT JOIN \`book_belongs_to_category\` AS bc ON bc.book_id = b.id`
+            	q += ` LEFT JOIN \`categories\` AS c ON c.id = bc.category_id`
+            	q += ` WHERE c.slug = '${ categorySlug }'`
+            }
 
             connection.query(q, async (err, data) => {
                 if (err) {
@@ -41,7 +71,7 @@ function getAuhors(bookId, connection) {
 
 function getCategories(bookId, connection) {
 	return new Promise((resolve, reject) => {
-		let q = `SELECT c.name, bc.id FROM \`categories\` AS c `+
+		let q = `SELECT c.name, c.slug, bc.id FROM \`categories\` AS c `+
 		`LEFT JOIN \`book_belongs_to_category\` AS bc ON bc.category_id = c.id WHERE bc.book_id = ${ bookId }`
 
 		connection.query(q, (err, data) => {
