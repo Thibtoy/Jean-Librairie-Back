@@ -7,7 +7,7 @@ const Router = server => {
 	// server.use('/', (req, res) => res.status(200).send({ msg: 'coucou' }))
 
 	server.use('/user', usersRoutes)
-	server.use('/books', firewall('user'), booksRoutes)
+	server.use('/books', booksRoutes)
 	server.use('/categories', categoriesRoutes)
 }
 
