@@ -45,7 +45,7 @@ const queries = {
                 else {
                 	for (let i = 0, l = data.length; i < l; i++) {
                 		let book = data[i]
-                		book.authors = await getAuhors(book.id, connection)
+                		book.authors = await getAuthors(book.id, connection)
                 		book.categories = await getCategories(book.id, connection)
                 	}
 

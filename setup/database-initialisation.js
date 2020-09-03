@@ -21,11 +21,11 @@ export default function databaseInitialisation() {
 			for (let i = 0, l = migrations.length; i < l; i++) {
 				let migration = migrations[i]
 				let operations = fs.readdirSync(`./_migrations/${migration}`)
+				let operationName = migration.split('_')[1]
 
 				for (let j = 0, n = operations.length; j < n; j++) {
 					let operation = operations[j]
 					let sqls = fs.readFileSync(`./_migrations/${migration}/${operation}`).toString().replace(/\\;/gi, '/$\\').split(';')
-					let operationName = migration.split('_')[1]
 
 					console.info(`Creating ${operationName.substring(0, operationName.length - 1).toLowerCase()} \`${operation.split('.')[0]}\``)
 
@@ -42,13 +42,16 @@ export default function databaseInitialisation() {
 						})
 						.catch(err => {throw err})
 					})
+
+				}
+
+				if ('tables' === operationName) {
+					console.info('loading books datas')
+					await loadBooksData(connection)
+					console.info('books data successfully loaded')
 				}
 			}
 
-			console.info('loading books datas')
-			await loadBooksData(connection)
-			console.info('books data successfully loaded')
-			
 			connection.end()
 
 			console.info('Your database is ready to use')
