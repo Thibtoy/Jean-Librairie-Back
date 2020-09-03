@@ -16,6 +16,16 @@ const services = {
             .catch(err => reject({ status: 500, payload: { success: false, message: "Internal Server Error" } }))
 		})
 	},
+	bookIsDisponible: (bookId) => {
+		return new Promise((resolve, reject) => {
+			bookQueries.getRemaningBooks(bookId)
+			.then(data => {
+				if (!data) resolve(false)
+				else resolve((data.nbOfBorrow < data.quantity)? true : false)
+			})
+	        .catch(err => reject(err))
+		})
+	}
 }
 
 export default services

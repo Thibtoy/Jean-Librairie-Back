@@ -16,7 +16,7 @@ const queries = {
                 else {
                 	for (let i = 0, l = data.length; i < l; i++) {
                 		let book = data[i]
-                		book.authors = await getAuhors(book.id, connection)
+                		book.authors = await getAuthors(book.id, connection)
                 		book.categories = await getCategories(book.id, connection)
                 	}
 
@@ -55,9 +55,25 @@ const queries = {
             })
         })
 	},
+    getRemaningBooks(bookId) {
+        return new Promise((resolve, reject) => {
+            let connection = database.connect()
+            let q = `SELECT b.id, b.quantity, COUNT(ub.id) AS nbOfBorrow FROM \`books\` AS b `+
+            `LEFT JOIN \`user_borrows_book\` AS ub ON ub.book_id = b.id `+
+            `WHERE b.id = ${ bookId } && ub.returned IS NULL GROUP BY b.id`
+
+            connection.query(q, (err, data) => {
+                if (err) reject(err)
+                else {
+                    if (data.length > 0) resolve(data[0])
+                    else resolve(false)
+                }
+            })
+        })
+    }
 }
 
-function getAuhors(bookId, connection) {
+export function getAuthors(bookId, connection) {
 	return new Promise((resolve, reject) => {
 		let q = `SELECT a.name, ba.id FROM \`authors\` AS a `+
 		`LEFT JOIN \`book_belongs_to_author\` AS ba ON ba.author_id = a.id WHERE ba.book_id = ${ bookId }`
@@ -69,7 +85,7 @@ function getAuhors(bookId, connection) {
 	})
 }
 
-function getCategories(bookId, connection) {
+export function getCategories(bookId, connection) {
 	return new Promise((resolve, reject) => {
 		let q = `SELECT c.name, c.slug, bc.id FROM \`categories\` AS c `+
 		`LEFT JOIN \`book_belongs_to_category\` AS bc ON bc.category_id = c.id WHERE bc.book_id = ${ bookId }`

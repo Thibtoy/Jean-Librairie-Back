@@ -47,7 +47,22 @@ const userController = {
                 .catch(err => res.status(err.status).send(err))
         }
         else res.status(200).send({ status: 200, payload: { success: false, message: "You must be logged in to access this section"}})
-    }
+    },
+	borrowBook: (req, res) => {
+		userServices.borrowBook(req.params.bookId, req.user.id)
+		.then(response => res.status(response.status).send(response.payload))
+		.catch(err => res.status(err.status).send(err.payload))
+	},
+	dashboard: (req, res) => {
+		userServices.dashboard(req.user.id)
+		.then(response => res.status(response.status).send(response.payload))
+		.catch(err => res.status(err.status).send(err.payload))
+	},
+	returnBook: (req, res) => {
+		userServices.returnBook(req.params.bookId, req.user.id)
+		.then(response => res.status(response.status).send(response.payload))
+		.catch(err => res.status(err.status).send(err.payload))
+	}	
 }
 
 export default userController

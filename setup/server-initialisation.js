@@ -25,7 +25,7 @@ const initialisation = async server => {
 
 	router(server)
 
-	// await databaseInitialisation()
+	await databaseInitialisation()
 
 	console.info('Application backend successfully initialised')
 }

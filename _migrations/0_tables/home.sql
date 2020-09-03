@@ -1,0 +1,8 @@
+CREATE TABLE `home` ( 
+	`id` INT NOT NULL AUTO_INCREMENT, 
+	`title` VARCHAR(255) NOT NULL,
+	`content` TEXT NOT NULL, 
+	`image` VARCHAR(255) NOT NULL,
+	`position` INT NOT NULL UNIQUE,
+	 PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
