@@ -1,8 +1,9 @@
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+
+import config from "../../../config/server.json"
 import userQueries from "./query"
 import bookServices from "../books/services"
-import bcrypt from "bcrypt"
-import config from "../../../config/server.json"
-import jwt from "jsonwebtoken"
 
 const refreshToken = decoded => {
 	let now = new Date()
